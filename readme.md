@@ -14,7 +14,9 @@ It is lisp-_like_, so in blockhead uses `(` parens `)` to hold scope and nest fu
 
 ## installation
 
+```
 npm install blockhead
+```
 
 ## examples and usage
 
