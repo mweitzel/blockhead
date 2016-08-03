@@ -8,9 +8,9 @@ intended for clean flow based transforms on data
 
 ([photo credit gutenberg](http://www.gutenberg.org/files/37381/37381-h/37381-h.htm#Page_46))
 
-The interpreter makes use of native JavaScript objects, so you both interpret blockhead scripts from JavaScript, and require .js modules from .bh land.
+The interpreter makes use of native JavaScript objects, so you can both interpret blockhead scripts from JavaScript, and require .js modules from .bh scripts.
 
-It is lisp-_like_, so in blockhead uses ( parens ) to hold scope and nest functions. But it also makes use of : colons : to separate and reduce blocks into eachother.
+It is lisp-_like_, so in blockhead uses `(` parens `)` to hold scope and nest functions. But it also makes use of `:` colons `:` to separate and reduce blocks into eachother.
 
 ## installation
 
