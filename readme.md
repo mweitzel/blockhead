@@ -95,6 +95,7 @@ you can run it yourself with
 $ (export PORT=8003 ; ./bh hello-https.bh)
 ```
 
+visit [localhost:8003](http://127.0.0.1:8003) to see try it out
 
 
 ## license
