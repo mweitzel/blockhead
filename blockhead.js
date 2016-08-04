@@ -2,23 +2,51 @@ var required = {}
   , path = require('path')
   , fs = require('fs')
   , ª = require('lil-carrot').apply
+  , ˆ = require('lil-carrot').apply
   , unto = require('unto')
   , argshift = require('argshift')
   , teelog = require('teelog')
   , noop = (()=>{})
+  , begetScope = require('./scope').extend
   , stdlib = {
       add: (a, b) => a + b
-    , sum: (...rest) => rest.reduce(stdlib.add)
+    , sum: (...nums) => nums.reduce(stdlib.add)
+    , process: process
+    , keys: Object.keys.bind(Object)
     , unto: argshift(unto)
-    , "\\": (fn, ...rest) => (...evenMore) => ª(fn||noop, rest.concat(evenMore))
+    , pass: (a) => a
+    , sum: (...rest) => rest.reduce(stdlib.add)
     , teelog: teelog
-    , '*' : argshift(ª)
-    , get: (id, obj) => obj[id]
-// import
+    , '*' : ª
+    , '!' : ˆ
+    , get: (obj, id) => obj[id]
+    , ctx_get: (obj, id) => obj[id].bind(obj)
+    , ctx_call: (obj, id, ...args) => obj[id].bind(obj).apply(null, args)
+    , import: require
+    , as: function (scope, tokens, args) {
+        var identifier = ns.resolveToken(tokens[0], scope, args)
+          , values =     ns.resolveToken(tokens[1], scope, args)
+        if(!isArray(identifier))
+          scope[identifier] = values
+        else
+          for( var i = 0; i < identifier.length; i++)
+            scope[identifier[i]] = values[i]
+        return values
+      }
+    , scope: function(scope, tokens, args) {
+        return stdlib['\\'](begetScope(scope), tokens).apply(null, args)
+      }
+    , "\\": function (scope, tokens) { return ns.exec.bind(null, tokens, scope) }
+    , "'": (...args) => args
     }
 
+stdlib['\\'].__blockhead_macro__ = true
+stdlib['\\'].ahhhhhhhhhhhhhhhhhhhhh = true
+stdlib['as'].__blockhead_macro__ = true
+stdlib.scope.__blockhead_macro__ = true
+
 var ns = module.exports = {
-  require: (name) => ns.compile(ns.loadOnly(name))
+  require: (name) => ns.interpret(ns.loadOnly(name))
 , loadOnly: (name) => fs.readFileSync(path.resolve(name), 'utf8')
 , buildStructure: text => ((tokens) =>
       parensMatch(tokens) && deepInvertUnto(liftMatch(tokens, '(', ')'))
@@ -26,6 +54,12 @@ var ns = module.exports = {
 , interpret: (string, scope) =>
     ns.exec(ns.buildStructure(string), scope || stdlib)
 , tokenize: text => text
+    .split('\n')
+    .map(str => str.split(';')[0])
+    .join('\n')
+    .trim()
+    .split('\n\n')
+    .join('::\n\n')
     .split(' ')
     .map(str => extractIfPresent(str, ':'))
     .reduce(join)
@@ -33,17 +67,50 @@ var ns = module.exports = {
     .reduce(join)
     .map(str => extractIfPresent(str, ')'))
     .reduce(join)
+    .map(str => extractIfPresent(str, '\n'))
+    .reduce(join)
+    .map(str => extractIfPresent(str, '	'))
+    .reduce(join)
     .filter(s => s !== '' && s !== '\n' && s !== '	')
-, exec: (structure, scope) =>
-    ª((first, ...rest) =>
-      ª(ns.resolveToken(first, scope)
-      , rest.map((str) => ns.resolveToken(str, scope))
-      )
-    , structure)
-, resolveToken: (token, scope) =>
-    isArray(token)
-    ? ns.exec(token, scope)
-    : (scope[token] || parseInt(token)) //JSON.parse(token))
+, exec: function(structure, scope, ...args) {
+    return (function(firstToken, ...remainingTokens) {
+      scope['<>'] = args || []
+      scope['.'] = (args || [])[0]
+      var thing = ns.resolveToken(firstToken, scope, args)
+      if(!isFunction(thing) && remainingTokens.length === 0)
+        return thing
+      thing = ensureFunction(thing, firstToken, scope)
+      if(thing.__blockhead_macro__) {
+        thing = thing(scope, remainingTokens, args)
+      }
+      else {
+        thing = thing.apply(
+          scope
+        , remainingTokens.map((struc) => ns.resolveToken(struc, scope, args))
+        )
+      }
+      return thing
+    }).apply(null, structure)
+  }
+, resolveToken: function(token, scope, args) {
+    return isArray(token)
+      ? ns.exec.bind(null, token, scope).apply(null, args)
+      : ( ( scope[token]      )
+        ||( isFinite(parseInt(token)) ? parseInt(token) : token )
+        )
+  }
+}
+
+function isFunction(fn) {
+  return typeof fn === 'function'
+}
+
+function ensureFunction(fn, token, scope) {
+  if(isFunction(fn)) { return fn }
+  console.log('token:', token)
+  console.log(Object.keys(scope))
+  console.log((scope))
+  throw new Error(fn + " is not a function")
 }
 
 function invertUnto(array) {
@@ -54,7 +121,7 @@ function invertUnto(array) {
     ? array
     : invertUnto(
         unnestIfSolo(
-          [                 /// or noop? in case empty?
+          [
             [ 'unto' ].concat( [ array.slice(0, i) ] ).concat([
               [ '\\' ].concat( array.slice(i+1, j === -1 ? array.length : (i+1+j)) )
             ])
@@ -83,25 +150,10 @@ function isArray(arr) {
 
 function deepInvertUnto(token_array_nestedArray) {
   var token, array, nestedArray
-  token = array = nestedArray = token_array_nestedArray
+  token = array = nestedArray = unnestIfSolo(token_array_nestedArray)
   if(!isArray(token_array_nestedArray))
     return token
-//  else if(!isNested(array))
-    return invertUnto(array).map(deepInvertUnto).map(unnestIfSolo)
-//  else {
-//    return nestedArray.map(deepInvertUnto)
-//  }
-
-//// is array
-//var containsArray = false
-//for(var i = 0; i < nestedArrays.length; i++)
-//  if(nestedArrays[i] && nestedArrays[i].constructor && nestedArrays[i].constructor.name === 'Array')
-//    containsArray = true
-
-//if(containsArray)
-//  return nestedArrays.map(deepInvertUnto)
-//else
-//  return nestedArrays.map(invertUnto)
+  return invertUnto(array).map(deepInvertUnto).map(unnestIfSolo)
 }
 
 function liftMatch(array, up, down) {
@@ -112,7 +164,7 @@ function liftMatch(array, up, down) {
     else if(array[i] === down)
       return liftMatch(
         array.slice(0,lastUp)
-        .concat([array.slice(lastUp+1,i)])
+        .concat([['scope'].concat([array.slice(lastUp+1,i)])])
         .concat(array.slice(i+1))
       , up
       , down
@@ -148,10 +200,5 @@ function extractIfPresent(string, subStr) {
     .slice(0, -1)
 }
 
-function contains(arrayLike, obj) {
-  return arrayLike.indexOf(obj) > -1
-}
-
-function join(a, b) {
-  return a.concat(b)
-}
+function contains(arrayLike, obj) { return arrayLike.indexOf(obj) > -1 }
+function join(a, b) { return a.concat(b) }
