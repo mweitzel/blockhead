@@ -68,6 +68,37 @@ is the same as
 add 5 :: 10
 ```
 
+#### hello-https
+
+this is a port of node's [hello-https](https://howtonode.org/hello-node)
+
+```lisp
+import ./responder : as respond . :
+import http : get . createServer : as new_serv . :
+
+
+\(as (' req res) <>
+  : ctx_get res end
+    : . web_serverrrrrrrrrrs!!!)
+: as respond_ .
+
+\(new_serv respond_
+    : as server .
+      : ctx_get server listen
+         : . (get process env : get . PORT))
+:as serv_port_message .
+
+\ * serv_port_message <>
+```
+
+you can run it yourself with
+
+```sh
+$ (export PORT=8003 ; ./bh hello-https.bh)
+```
+
+
+
 ## license
 
 MIT

@@ -1,6 +1,4 @@
-import ./responder : as respond . :
 import http : get . createServer : as new_serv . :
-
 
 \(as (' req res) <>
     : ctx_get res end
