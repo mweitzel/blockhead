@@ -1,4 +1,4 @@
-import http : get . createServer : as new_serv . :
+import http : get . createServer : as new_serv .
 
 \(as (' req res) <>
     : ctx_get res end

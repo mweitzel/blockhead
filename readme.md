@@ -73,7 +73,7 @@ add 5 :: 10
 this is a port of node's [hello-https](https://howtonode.org/hello-node)
 
 ```lisp
-import http : get . createServer : as new_serv . :
+import http : get . createServer : as new_serv .
 
 \(as (' req res) <>
   : ctx_get res end
