@@ -20,7 +20,43 @@ npm install blockhead
 
 ## examples and usage
 
-...
+- `<>` references arguments, as an array
+- `.` references the first argument
+- `:` forward return to method queue
+- `(` open a new level of lexical scope
+- `)` close current level of lexical scope
+- `;` comment
+
+The command
+```
+(add 5 10) : as fifteen .
+```
+
+will add 5 and 10, forward it to the next block use the `.` operator to reference first argument and associate it within the current (and inner-more) levels of scope
+
+
+A single line break does nothing
+```
+add
+5
+10
+; => 15
+```
+
+Two line breaks are replaced with a full stop, or `::`.
+
+```
+add 5
+
+10
+; => 10
+```
+
+is the same as
+
+```
+add 5 :: 10
+```
 
 ## license
 
