@@ -1,6 +1,6 @@
 # blockhead
 
-lisp-like language and interpreter for drop-in use with javascript
+lisp-like chain based language and interpreter for drop-in use with javascript
 
 intended for clean flow based transforms on data
 
