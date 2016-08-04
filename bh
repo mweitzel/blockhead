@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+
+var bh = require('./blockhead')
+  , file = process.argv[2]
+  , util = require('util')
+
+file ||  ( console.log('no file provided'), process.exit(127) )
+
+
+console.log('running file ' + file+'\n')
+
+/*
+console.log(
+  util.inspect(
+    bh.buildStructure(bh.loadOnly(file))
+  , {depth: 100, colors: true}
+  )
+)
+*/
+
+bh.require(file)(8003, 'nice its running')
+
+
+console.log('\nran '+file)
