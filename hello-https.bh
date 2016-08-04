@@ -1,0 +1,16 @@
+import ./responder : as respond . :
+import http : get . createServer : as new_serv . :
+
+
+\(as (' req res) <>
+    : ctx_get res end
+      : . web_serverrrrrrrrrrs!!!)
+: as respond_ .
+
+\(new_serv respond_
+    : as server .
+      : ctx_get server listen
+         : . (get process env : get . PORT))
+:as serve .
+
+\ * serve <>
