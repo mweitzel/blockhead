@@ -22,7 +22,7 @@ npm install blockhead
 
 - `<>` references arguments, as an array
 - `.` references the first argument
-- `:` forward return to method queue
+- `:` forward return [unto](https://github.com/mweitzel/unto) to next block
 - `(` open a new level of lexical scope
 - `)` close current level of lexical scope
 - `;` comment
