@@ -4,7 +4,7 @@ lisp-like chain based language and interpreter for drop-in use with javascript
 
 intended for clean flow based transforms on data
 
-![](<img align="center" src="http://www.gutenberg.org/files/37381/37381-h/images/pl07.jpg" alt="The Ducks, which he had once saved, dived and brought up the key from the depths.">)
+![The Ducks, which he had once saved, dived and brought up the key from the depths.](http://www.gutenberg.org/files/37381/37381-h/images/pl07.jpg)
 
 ([photo credit gutenberg](http://www.gutenberg.org/files/37381/37381-h/37381-h.htm#Page_46))
 
