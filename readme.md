@@ -27,16 +27,26 @@ npm install blockhead
 - `)` close current level of lexical scope
 - `;` comment
 
-The command
-```
+In the following command, add 5 and 10, forward to the next block where we use the `.` operator to reference first argument. `as` associates it to `fifteen` within the current (and inner-more) levels of scope
+```lisp
 (add 5 10) : as fifteen .
+
+fifteen
+; => 15
 ```
 
-will add 5 and 10, forward it to the next block use the `.` operator to reference first argument and associate it within the current (and inner-more) levels of scope
+Parens create scope, so here the token `fifteen` doees not escape the scope
+
+```lisp
+(add 5 10 : as fifteen .)
+
+fifteen
+; => fifteen
+```
 
 
 A single line break does nothing
-```
+```lisp
 add
 5
 10
@@ -45,7 +55,7 @@ add
 
 Two line breaks are replaced with a full stop, or `::`.
 
-```
+```lisp
 add 5
 
 10
@@ -54,7 +64,7 @@ add 5
 
 is the same as
 
-```
+```lisp
 add 5 :: 10
 ```
 
