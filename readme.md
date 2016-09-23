@@ -26,6 +26,8 @@ npm install blockhead
 - `(` open a new level of lexical scope
 - `)` close current level of lexical scope
 - `;` comment
+- `*` apply
+- `\` as anonymous function
 
 In the following command, add 5 and 10, forward to the next block where we use the `.` operator to reference first argument. `as` associates it to `fifteen` within the current (and inner-more) levels of scope
 ```lisp
